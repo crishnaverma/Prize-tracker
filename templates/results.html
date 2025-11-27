@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <style>
+        body { font-family: Arial; background: #eef2f5; padding: 30px; }
+        h2 { text-align: center; font-size: 30px; }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 320px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red; font-size: 18px; margin-top: 40px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Results for: {{ product }}</h2>
+
+<div class="container">
+
+    <!-- Flipkart -->
+    <div class="card">
+        <h3>Flipkart</h3>
+        {% if flipkart %}
+            <img src="{{ flipkart.image }}">
+            <p><b>{{ flipkart.title }}</b></p>
+            <p style="font-size:20px;">{{ flipkart.price }}</p>
+            <a href="{{ flipkart.link }}" target="_blank">View on Flipkart</a>
+        {% else %}
+            <p class="error">Not found</p>
+        {% endif %}
+    </div>
+
+    <!-- Croma -->
+    <div class="card">
+        <h3>Croma</h3>
+        {% if croma %}
+            <img src="{{ croma.image }}">
+            <p><b>{{ croma.title }}</b></p>
+            <p style="font-size:20px;">{{ croma.price }}</p>
+            <a href="{{ croma.link }}" target="_blank">View on Croma</a>
+        {% else %}
+            <p class="error">Not found</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<br><br>
+<center><a href="/">🔄 Search Again</a></center>
+
+</body>
+</html>

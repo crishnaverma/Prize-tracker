@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Price Tracker</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding-top: 80px; background: #f0f4f8; }
+        h2 { font-size: 30px; margin-bottom: 20px; }
+        input {
+            width: 300px; padding: 12px; font-size: 18px;
+            border-radius: 8px; border: 1px solid #ccc;
+        }
+        button {
+            padding: 12px 20px; font-size: 18px;
+            border: none; background: #007bff; color: white; border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover { background: #0056d2; }
+    </style>
+</head>
+<body>
+
+<h2>📦 Price Tracker</h2>
+
+<form action="/track" method="post">
+    <input type="text" name="content" placeholder="Search product..." required>
+    <button type="submit">Search</button>
+</form>
+
+</body>
+</html>
