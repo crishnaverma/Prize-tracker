@@ -113,7 +113,6 @@ def get_croma_playwright(product_name):
 
 # =====================================================================
 #                           FLIPKART SCRAPER (SELENIUM)
-# =====================================================================
 def get_flipkart_live(product_name):
     driver = None
     try:
@@ -121,30 +120,35 @@ def get_flipkart_live(product_name):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument("--headless=new")
+        # REMOVE headless for reliability
+        # options.add_argument("--headless=new")
 
-        driver = uc.Chrome(options=options, version_main=142)
-        driver._ignore__del__ = True
+        driver = uc.Chrome(options=options)
 
         url = "https://www.flipkart.com/search?q=" + product_name.replace(" ", "+")
         driver.get(url)
 
+        # NEW SELECTORS BASED ON YOUR SCREENSHOT
         title_el = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((
-                By.CSS_SELECTOR, "div.KzDlHZ, a._1fQZEK, div._4rR01T"
+                By.CSS_SELECTOR,
+                "div.col-7-12 div"
             ))
         )
 
+        # product card (ancestor <a>)
         card = title_el.find_element(By.XPATH, "./ancestor::a")
 
         title = title_el.text.strip()
         link = card.get_attribute("href")
 
+        # PRICE
         try:
-            price = card.find_element(By.CSS_SELECTOR, "div.Nx9bqj, div._30jeq3").text
+            price = card.find_element(By.CSS_SELECTOR, "div.col-5-12.mao5dl div").text
         except:
             price = "N/A"
 
+        # IMAGE
         try:
             image = card.find_element(By.CSS_SELECTOR, "img").get_attribute("src")
         except:
@@ -159,13 +163,15 @@ def get_flipkart_live(product_name):
             "link": link
         }
 
-    except:
+    except Exception as e:
+        print("FLIPKART ERROR:", e)
         if driver:
             try:
                 driver.quit()
             except:
                 pass
         return None
+
 
 
 
