@@ -1,1 +1,1 @@
-price tracker based on python 
+Price tracker based on python using Playwrite, selenium
