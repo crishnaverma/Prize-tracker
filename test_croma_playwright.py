@@ -9,12 +9,9 @@ from multiprocessing import Process, Manager
 
 app = Flask(__name__)
 
-# ============================================================
-# 🔥 CACHING SYSTEM (RESULTS RETURN INSTANTLY FOR SAME QUERY)
-# ============================================================
 
-CACHE = {}          # In-memory cache
-CACHE_EXPIRY = 300  # Cache valid for 5 minutes (300 sec)
+CACHE = {}         
+CACHE_EXPIRY = 300 
 
 
 def get_from_cache(product_name):
@@ -32,9 +29,6 @@ def save_to_cache(product_name, data):
     CACHE[product_name] = (data, time.time())
 
 
-# ============================================================
-# 🔥 PRELOAD PLAYWRIGHT BROWSER (LAUNCHED ONCE)
-# ============================================================
 
 _play = sync_playwright().start()
 
@@ -48,9 +42,7 @@ _prebrowser = _play.chromium.launch(
 )
 
 
-# =====================================================================
-#                           CROMA SCRAPER (PLAYWRIGHT)
-# =====================================================================
+
 def get_croma_playwright(product_name):
 
     # PRELOAD: reuse same browser instance
@@ -103,7 +95,7 @@ def get_croma_playwright(product_name):
             context.close()
             return None
 
-        # 🚀 Reduced scroll time → instant lazy-load trigger
+        #  Reduced scroll time → instant lazy-load trigger
         page.evaluate("window.scrollBy(0, 2500)")  
         time.sleep(0.3)
 
@@ -136,9 +128,7 @@ def get_croma_playwright(product_name):
 
 
 
-# =====================================================================
-#                           FLIPKART SCRAPER (SELENIUM)
-# =====================================================================
+
 def get_flipkart_live(product_name):
     driver = None
     try:
@@ -191,9 +181,7 @@ def get_flipkart_live(product_name):
 
 
 
-# =====================================================================
-#           MULTIPROCESSING SCRAPER WRAPPER (DO NOT TOUCH)
-# =====================================================================
+
 def run_scraper(func, product, return_dict, key):
     try:
         return_dict[key] = func(product)
@@ -202,9 +190,7 @@ def run_scraper(func, product, return_dict, key):
 
 
 
-# =====================================================================
-#                           FLASK ROUTES
-# =====================================================================
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -214,9 +200,7 @@ def home():
 def track():
     product = request.form["content"].strip()
 
-    # ============================================================
-    # ⚡ STEP 1 → Check CACHE (Instant Results)
-    # ============================================================
+
     cached = get_from_cache(product)
     if cached:
         return render_template(
@@ -226,9 +210,7 @@ def track():
             croma=cached["croma"]
         )
 
-    # ============================================================
-    # ⚡ STEP 2 → Run scrapers in PARALLEL
-    # ============================================================
+
     with Manager() as manager:
         return_dict = manager.dict()
 
